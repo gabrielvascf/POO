@@ -1,7 +1,7 @@
 import Entrada from "../io/entrada";
 import Cliente from "../modelo/cliente";
 import Listagem from "./listagem";
-import ListagemPets from "./listagemPets";
+import ListagemPets from "./listagemPet";
 export default class ListagemClientes extends Listagem {
     private clientes: Array<Cliente>
     private entrada: Entrada
