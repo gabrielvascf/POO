@@ -5,6 +5,12 @@ export default class CPF {
         this.valor = valor
         this.dataEmissao = dataEmissao
     }
+    public set setValor(valor: string) {
+        this.valor = valor
+    }
+    public set setDataEmissao(dataEmissao: Date) {
+        this.dataEmissao = dataEmissao
+    }
     public get getValor(): string {
         return this.valor
     }
