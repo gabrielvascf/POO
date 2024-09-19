@@ -2,6 +2,7 @@ import Entrada from "../io/entrada";
 import Cliente from "../modelo/cliente";
 import Listagem from "./listagem";
 import ListagemPets from "./listagemPet";
+import ListagemServiço from "./listagemServico";
 export default class ListagemClientes extends Listagem {
     private clientes: Array<Cliente>
     private entrada: Entrada
@@ -18,13 +19,17 @@ export default class ListagemClientes extends Listagem {
             console.log(`Nome: ` + cliente.nome);
             console.log(`Nome social: ` + cliente.nomeSocial);
             console.log(`CPF: ` + cliente.getCpf.getValor);
+            console.log(`Pets: ` + cliente.getPets);
+            console.log(`Serviços consumidos: ` + cliente.getServicosConsumidos);
             console.log(`--------------------------------------`);
             console.log(`O que deseja editar?`);
             console.log(`(1) - Nome`);
             console.log(`(2) - Nome social`);
             console.log(`(3) - CPF`);
             console.log(`(4) - Pets`);
-            console.log(`(5) - Excluir`);
+            console.log(`(5) - Serviços consumidos`);
+            
+            console.log(`(6) - Excluir`);
             
             let entrada = this.entrada.receberNumero(`Digite a opção desejada: `);
             switch (entrada) {
@@ -52,6 +57,43 @@ export default class ListagemClientes extends Listagem {
                     listagemPets.listar()
                     break;
                 case 5:
+                    let listagemServicos = cliente.getServicosConsumidos
+                    for (let servico of listagemServicos) {
+                        console.log(`Nome: ` + servico.nome)
+                        console.log(`--------------------------------------`);
+                    }
+                    console.log(`\n`);
+                    console.log(`Deseja adicionar ou remover algum serviço?`);
+                    console.log(`(1) - Sim`);
+                    console.log(`(2) - Não`);
+                    let entrada = this.entrada.receberNumero(`Digite a opção desejada: `);
+                    if (entrada === 1) {
+                        for (let servico of listagemServicos) {
+                            console.log(`Nome: ` + servico.nome)
+                            console.log(`--------------------------------------`);
+                        }
+                        console.log(`\n`);
+                        let servico = this.entrada.receberTexto(`Digite o nome do serviço que deseja adicionar ou remover: `)
+                        let servicoEncontrado = listagemServicos.find(s => s.nome === servico)
+                        if (servicoEncontrado) {
+                            console.log(`Serviço encontrado!`);
+                            console.log(`Nome: ` + servicoEncontrado.nome)
+                            console.log(`--------------------------------------`);
+                            console.log(`\n`);
+                            console.log(`Deseja adicionar ou remover o serviço?`);
+                            console.log(`(1) - Adicionar`);
+                            console.log(`(2) - Remover`);
+                            let entrada = this.entrada.receberNumero(`Digite a opção desejada: `);
+                            if (entrada === 1) {
+                                cliente.adicionarServico(servicoEncontrado)
+                            } else if (entrada === 2) {
+                                cliente.removerServico(servicoEncontrado)
+                            }
+                        } else {
+                            console.log(`Serviço não encontrado :(`);
+                        }
+                    }
+                case 6:
                     let index = this.clientes.indexOf(cliente)
                     this.clientes.splice(index, 1)
                     break;
@@ -63,15 +105,19 @@ export default class ListagemClientes extends Listagem {
             console.log(`Cliente não encontrado :(`);
         }
     }
-    public listar(): void {
+    public listar(readonly: boolean = false): void {
         console.log(`\nLista de todos os clientes:`);
         this.clientes.forEach(cliente => {
             console.log(`Nome: ` + cliente.nome);
             console.log(`Nome social: ` + cliente.nomeSocial);
             console.log(`CPF: ` + cliente.getCpf.getValor);
+            console.log(`Pets: ` + cliente.getPets);
             console.log(`--------------------------------------`);
         });
         console.log(`\n`);
+        if (readonly) {
+            return
+        }
         console.log("Deseja realizar alguma edição?");
         console.log("(1) - Sim");
         console.log("(2) - Não");

@@ -33,11 +33,14 @@ export default class ListagemServiço extends Listagem {
         }
     }
 
-    listar() {
+    listar(readonly: boolean = false) {
         console.log(`\Lista de todos os serviços:`)
         for (let servico of this.servicos) {
             console.log(`Nome: ` + servico.nome)
             console.log(`--------------------------------------`);
+        }
+        if (readonly) {
+            return
         }
         console.log(`\n`);
         console.log(`Deseja editar algum serviço?`);

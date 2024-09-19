@@ -47,4 +47,36 @@ export default class Cliente {
     public get getPets(): Array<Pet>{
         return this.pets
     }
+    public adicionarServico(servico: Servico): void {
+        this.servicosConsumidos.push(servico);
+    }
+    public removerServico(servico: Servico): void {
+        const index = this.servicosConsumidos.indexOf(servico);
+        if (index > -1) {
+            this.servicosConsumidos.splice(index, 1);
+        }
+    }
+    public adicionarProduto(produto: Produto): void {
+        this.produtosConsumidos.push(produto);
+    }
+    public removerProduto(produto: Produto): void {
+        const index = this.produtosConsumidos.indexOf(produto);
+        if (index > -1) {
+            this.produtosConsumidos.splice(index, 1);
+        }
+    }
+    public getGastos(escopo: "produtos" | "serviços"): number {
+        let total = 0
+        // TODO: ADICIONAR PREÇO NOS PRODUTOS E SERVIÇOS
+        if (escopo === "produtos") {
+            this.produtosConsumidos.forEach(produto => {
+                total += produto.getPreco
+            })
+        } else if (escopo === "serviços") {
+            this.servicosConsumidos.forEach(servico => {
+                total += servico.getPreco
+            })
+        }
+        return total
+    }
 }

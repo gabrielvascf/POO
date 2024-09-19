@@ -33,7 +33,7 @@ export default class ListagemProduto extends Listagem {
         }
     }
 
-    listar() {
+    listar(readonly: boolean = false) {
         console.log(`\Lista de todos os produtos:`)
         for (let produto of this.produtos) {
             console.log(`Nome: ` + produto.nome)
