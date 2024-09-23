@@ -6,7 +6,6 @@ import CadastroProduto from "../negocio/cadastroProduto";
 import ListagemProduto from "../negocio/listagemProduto";
 import CadastroServico from "../negocio/cadastroServico";
 import ListagemServico from "../negocio/listagemServico";
-import { log } from "console";
 
 console.log(`Bem-vindo ao melhor sistema de gerenciamento de pet shops e clínicas veterinarias`)
 let empresa = new Empresa()
@@ -22,10 +21,9 @@ while (execucao) {
     console.log(`6 - Listar todos os serviços`);
     console.log(`7 - Cadastrar cliente em serviço`);
     console.log(`8 - Adicionar produto à cliente`);
-    console.log(`9 - Clientes mais consumidores`);
-    
-    console.log();
-    
+    console.log(`9 - Clientes com mais produtos ou serviços consumidos`);
+    console.log(`10 - Serviços ou produtos mais consumidos`);
+
     console.log(`0 - Sair`);
 
     let entrada = new Entrada()
@@ -112,19 +110,67 @@ while (execucao) {
             break;
         case 9:
             let clientes = empresa.getClientes
-            clientes.sort((a, b) => b.getValorGasto - a.getValorGasto)
-            console.log(`Clientes mais consumidores:`);
-            clientes.forEach(cliente => {
+            console.log(`Deseja ordenar por: `);
+            console.log(`(1) - Quantidade de produtos: `);
+            console.log(`(2) - Quantidade de serviços: `);
+            console.log(`(3) - Quantidade de serviços e produtos: `);
+            opcao = entrada.receberNumero(`Por favor, escolha uma opção: `)
+            switch (opcao) {
+                case 1:
+                    clientes.sort((a, b) => a.getProdutosConsumidos.length - b.getProdutosConsumidos.length)
+                    break;
+                case 2:
+                    clientes.sort((a, b) => a.getServicosConsumidos.length - b.getServicosConsumidos.length)
+                    break;
+                case 3:
+                    clientes.sort((a, b) => (a.getProdutosConsumidos.length + a.getServicosConsumidos.length) - (b.getProdutosConsumidos.length + b.getServicosConsumidos.length))
+                    break;
+            }
+            let i = 0
+            for (cliente of clientes) {
                 console.log(`Nome: ` + cliente.nome);
-                console.log(`Valor gasto: ` + cliente.getValorGasto);
-                console.log(`--------------------------------------`);
-            });
-            break
+                console.log(`Valor total gasto: ` + cliente.getGastos("total"));
+                console.log(`Valor gasto em produtos: ` + cliente.getGastos("produtos"));
+                console.log(`Valor gasto em serviços: ` + cliente.getGastos("serviços"));
+                i++
+                if (i == 10) {
+                    break
+                }
+            }
+        case 10:
+            clientes = empresa.getClientes
+            let itens = []
+            console.log(`Deseja ordenar por: `);
+            console.log(`(1) - Produtos: `);
+            console.log(`(2) - Serviços: `);
+            console.log(`(3) - Total: `);
+            opcao = entrada.receberNumero(`Por favor, escolha uma opção: `)
+
+            itens = opcao === 1 ? empresa.getProdutos : opcao === 2 ? empresa.getServicos : empresa.getProdutos.concat(empresa.getServicos) // O QUE É ISSO
+
+            itens = itens.map(item => {
+                return {item: item, total: 0, preco: item.preco}
+            })
+
+            for (cliente of clientes) {
+                for (let item of itens) {
+                    if (cliente.getProdutosConsumidos.includes(item.item) || cliente.getServicosConsumidos.includes(item.item)) {
+                        item.total++
+                    }
+                }
+            }
+            itens.sort((a, b) => a.total - b.total)
+            for (let item of itens) {
+                console.log(`Nome: ` + item.item.nome);
+                console.log(`Número de clientes: ` + item.total);
+                console.log(`Preço por item: ` + item.preco);
+                console.log(`-----------------`);
+            }
         case 0:
             execucao = false
             console.log(`Até mais`)
             console.log(empresa);
-            
+
             break;
         default:
             console.log(`Operação não entendida :(`)

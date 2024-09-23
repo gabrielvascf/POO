@@ -65,16 +65,17 @@ export default class Cliente {
             this.produtosConsumidos.splice(index, 1);
         }
     }
-    public getGastos(escopo: "produtos" | "serviços"): number {
+    public getGastos(escopo: "produtos" | "serviços" | "total"): number {
         let total = 0
         // TODO: ADICIONAR PREÇO NOS PRODUTOS E SERVIÇOS
-        if (escopo === "produtos") {
+        if (escopo === "produtos" || escopo == "total") {
             this.produtosConsumidos.forEach(produto => {
-                total += produto.getPreco
+                total += produto.preco
             })
-        } else if (escopo === "serviços") {
+        }
+        if (escopo === "serviços" || escopo == "total") {
             this.servicosConsumidos.forEach(servico => {
-                total += servico.getPreco
+                total += servico.preco
             })
         }
         return total
