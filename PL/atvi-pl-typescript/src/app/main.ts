@@ -6,10 +6,27 @@ import CadastroProduto from "../negocio/cadastroProduto";
 import ListagemProduto from "../negocio/listagemProduto";
 import CadastroServico from "../negocio/cadastroServico";
 import ListagemServico from "../negocio/listagemServico";
+import ListagemPets from "../negocio/listagemPet";
+import Servico from "../modelo/servico";
+import CPF from "../modelo/cpf";
+import Cliente from "../modelo/cliente";
+import Pet from "../modelo/pet";
+import Produto from "../modelo/produto";
+
+const DEBUG = true
 
 console.log(`Bem-vindo ao melhor sistema de gerenciamento de pet shops e clínicas veterinarias`)
 let empresa = new Empresa()
 let execucao = true
+
+if (DEBUG) {
+    let clie = new Cliente("João", "João da Silva", new CPF("12345678900", new Date(2020, 1, 1)))
+    empresa.getClientes.push(clie)
+    clie.getPets.push(new Pet("Rex", "Vira-lata", "Cachorro"))
+    clie.getPets.push(new Pet("Mia", "Vira-lata", "Gato"))
+    empresa.getServicos.push(new Servico("Banho", 50))
+    empresa.getProdutos.push({ nome: "Ração", preco: 100 })
+}
 
 while (execucao) {
     console.log(`Opções:`);
@@ -71,12 +88,18 @@ while (execucao) {
                 let listagemCliente = new ListagemClientes(empresa.getClientes)
                 listagemCliente.listar(true)
             }
-            let nomeCliente = entrada.receberTexto(`Digite o nome do cliente: `)
-            let nomeServico = entrada.receberTexto(`Digite o nome do serviço: `)
-            let cliente = empresa.getClientes.find(cliente => cliente.nome === nomeCliente)
-            let servico = empresa.getServicos.find(servico => servico.nome === nomeServico)
+            let servico = empresa.getServicos.find(servico => servico.nome === entrada.receberTexto(`Digite o nome do serviço: `))
+            let cliente = empresa.getClientes.find(cliente => cliente.nome === entrada.receberTexto(`Digite o nome do cliente: `))
             if (cliente && servico) {
-                cliente.adicionarServico(servico)
+                let listagemPets = new ListagemPets(cliente.getPets)
+                listagemPets.listar(true)
+                console.log("Para qual pet deseja cadastrar o serviço?");
+                let pet = cliente.getPets.find(pet => pet.getNome === entrada.receberTexto(`Digite o nome do pet: `))
+                if (pet) {
+                    cliente.adicionarServico(new Servico(servico.nome, servico.preco, pet))
+                } else {
+                    console.log(`Pet não encontrado :(`);
+                }
             } else {
                 console.log(`Cliente ou serviço não encontrado :(`);
             }
@@ -98,18 +121,26 @@ while (execucao) {
                 let listagemProduto = new ListagemProduto(empresa.getProdutos)
                 listagemProduto.listar(true)
             }
-            nomeCliente = entrada.receberTexto(`Digite o nome do cliente: `)
+            let nomeCliente = entrada.receberTexto(`Digite o nome do cliente: `)
             let nomeProduto = entrada.receberTexto(`Digite o nome do produto: `)
-            cliente = empresa.getClientes.find(cliente => cliente.nome === nomeCliente)
+            let clienteEncontrado = empresa.getClientes.find(cliente => cliente.nome === nomeCliente)
             let produto = empresa.getProdutos.find(produto => produto.nome === nomeProduto)
-            if (cliente && produto) {
-                cliente.adicionarProduto(produto)
+            if (clienteEncontrado && produto) {
+                console.log(`Para qual pet deseja adicionar o produto?`);
+                let listagemPets = new ListagemPets(clienteEncontrado.getPets)
+                listagemPets.listar()
+                let pet = clienteEncontrado.getPets.find(pet => pet.getNome === entrada.receberTexto(`Digite o nome do pet: `))
+                if (pet) {
+                    clienteEncontrado.adicionarProduto(new Produto(produto.nome, produto.preco, pet))
+                } else {
+                    console.log(`Pet não encontrado :(`);
+                }
             } else {
                 console.log(`Cliente ou produto não encontrado :(`);
             }
             break;
         case 9:
-            let clientes = empresa.getClientes
+            let clientesOrdenados = empresa.getClientes
             console.log(`Deseja ordenar por: `);
             console.log(`(1) - Quantidade de produtos: `);
             console.log(`(2) - Quantidade de serviços: `);
@@ -117,17 +148,17 @@ while (execucao) {
             opcao = entrada.receberNumero(`Por favor, escolha uma opção: `)
             switch (opcao) {
                 case 1:
-                    clientes.sort((a, b) => a.getProdutosConsumidos.length - b.getProdutosConsumidos.length)
+                    clientesOrdenados.sort((a, b) => a.getProdutosConsumidos.length - b.getProdutosConsumidos.length)
                     break;
                 case 2:
-                    clientes.sort((a, b) => a.getServicosConsumidos.length - b.getServicosConsumidos.length)
+                    clientesOrdenados.sort((a, b) => a.getServicosConsumidos.length - b.getServicosConsumidos.length)
                     break;
                 case 3:
-                    clientes.sort((a, b) => (a.getProdutosConsumidos.length + a.getServicosConsumidos.length) - (b.getProdutosConsumidos.length + b.getServicosConsumidos.length))
+                    clientesOrdenados.sort((a, b) => (a.getProdutosConsumidos.length + a.getServicosConsumidos.length) - (b.getProdutosConsumidos.length + b.getServicosConsumidos.length))
                     break;
             }
             let i = 0
-            for (cliente of clientes) {
+            for (let cliente of clientesOrdenados) {
                 console.log(`Nome: ` + cliente.nome);
                 console.log(`Valor total gasto: ` + cliente.getGastos("total"));
                 console.log(`Valor gasto em produtos: ` + cliente.getGastos("produtos"));
@@ -138,21 +169,73 @@ while (execucao) {
                 }
             }
         case 10:
-            clientes = empresa.getClientes
-            let itens = []
+            let clientes = empresa.getClientes
+            let itens: { item: any; total: any; preco: any; }[] = []
             console.log(`Deseja ordenar por: `);
-            console.log(`(1) - Produtos: `);
-            console.log(`(2) - Serviços: `);
-            console.log(`(3) - Total: `);
+            console.log(`(1) - Raças mais consumidoras: `);
+            console.log(`(2) - Tipos mais consumidores: `);
+            console.log(`(3) - Produtos mais consumidos: `);
+            console.log(`(4) - Serviços mais consumidos: `);
+
             opcao = entrada.receberNumero(`Por favor, escolha uma opção: `)
 
-            itens = opcao === 1 ? empresa.getProdutos : opcao === 2 ? empresa.getServicos : empresa.getProdutos.concat(empresa.getServicos) // O QUE É ISSO
-
+            switch (opcao) {
+                case 1:
+                    for (let cliente of clientes) {
+                        for (let pet of cliente.getPets) {
+                            let item = itens.find(item => item.item === pet.getRaca)
+                            if (item) {
+                                item.total++
+                            } else {
+                                itens.push({ item: pet.getRaca, total: 1, preco: 0 })
+                            }
+                        }
+                    }
+                    break;
+                case 2:
+                    for (let cliente of clientes) {
+                        for (let pet of cliente.getPets) {
+                            let item = itens.find(item => item.item === pet.getTipo)
+                            if (item) {
+                                item.total++
+                            } else {
+                                itens.push({ item: pet.getTipo, total: 1, preco: 0 })
+                            }
+                        }
+                    }
+                    break;
+                case 3:
+                    itens = empresa.getProdutos.map(produto => {
+                        return { item: produto.nome, total: 0, preco: produto.preco }
+                    })
+                    for (let cliente of clientes) {
+                        for (let produto of cliente.getProdutosConsumidos) {
+                            let item = itens.find(item => item.item === produto.nome)
+                            if (item) {
+                                item.total++
+                            }
+                        }
+                    }
+                    break;
+                case 4:
+                    itens = empresa.getServicos.map(servico => {
+                        return { item: servico.nome, total: 0, preco: servico.preco }
+                    })
+                    for (let cliente of clientes) {
+                        for (let servico of cliente.getServicosConsumidos) {
+                            let item = itens.find(item => item.item === servico.nome)
+                            if (item) {
+                                item.total++
+                            }
+                        }
+                    }
+                    break;
+            }
             itens = itens.map(item => {
-                return {item: item, total: 0, preco: item.preco}
+                return { item: item, total: 0, preco: item.preco }
             })
 
-            for (cliente of clientes) {
+            for (let cliente of clientes) {
                 for (let item of itens) {
                     if (cliente.getProdutosConsumidos.includes(item.item) || cliente.getServicosConsumidos.includes(item.item)) {
                         item.total++
@@ -161,11 +244,12 @@ while (execucao) {
             }
             itens.sort((a, b) => a.total - b.total)
             for (let item of itens) {
-                console.log(`Nome: ` + item.item.nome);
-                console.log(`Número de clientes: ` + item.total);
-                console.log(`Preço por item: ` + item.preco);
-                console.log(`-----------------`);
+                console.log(`Item: ` + item.item.item);
+                console.log(`Total: ` + item.total);
+                console.log(`Preço: ` + item.item.preco);
+                console.log(`--------------------------------------`);
             }
+            break
         case 0:
             execucao = false
             console.log(`Até mais`)

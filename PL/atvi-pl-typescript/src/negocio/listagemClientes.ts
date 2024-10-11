@@ -55,6 +55,8 @@ export default class ListagemClientes extends Listagem {
                 case 4:
                     let listagemPets = new ListagemPets(cliente.getPets)
                     listagemPets.listar()
+                    console.log(cliente);
+                    
                     break;
                 case 5:
                     let listagemServicos = cliente.getServicosConsumidos
@@ -111,16 +113,14 @@ export default class ListagemClientes extends Listagem {
             console.log(`Nome: ` + cliente.nome);
             console.log(`Nome social: ` + cliente.nomeSocial);
             console.log(`CPF: ` + cliente.getCpf.getValor);
-            console.log(`Pets: ` + cliente.getPets);
-            console.log(`Serviços consumidos: ` + cliente.getServicosConsumidos);
-            console.log(`Produtos consumidos: ` + cliente.getProdutosConsumidos);
+            console.log(`Pets: ` + cliente.getPets.map(pet => pet.getNome).join(', '));
+            console.log(`Serviços consumidos: ` + cliente.getServicosConsumidos.map(servico => servico.nome).join(', '));
+            console.log(`Produtos consumidos: ` + cliente.getProdutosConsumidos.map(produto => produto.nome).join(', '));
             
             console.log(`--------------------------------------`);
         });
         console.log(`\n`);
-        if (readonly) {
-            return
-        }
+        if (readonly) return 
         console.log("Deseja realizar alguma edição?");
         console.log("(1) - Sim");
         console.log("(2) - Não");

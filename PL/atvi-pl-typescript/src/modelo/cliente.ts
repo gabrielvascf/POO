@@ -68,12 +68,12 @@ export default class Cliente {
     public getGastos(escopo: "produtos" | "serviços" | "total"): number {
         let total = 0
         // TODO: ADICIONAR PREÇO NOS PRODUTOS E SERVIÇOS
-        if (escopo === "produtos" || escopo == "total") {
+        if (escopo === "produtos" || escopo === "total") {
             this.produtosConsumidos.forEach(produto => {
                 total += produto.preco
             })
         }
-        if (escopo === "serviços" || escopo == "total") {
+        if (escopo === "serviços" || escopo === "total") {
             this.servicosConsumidos.forEach(servico => {
                 total += servico.preco
             })

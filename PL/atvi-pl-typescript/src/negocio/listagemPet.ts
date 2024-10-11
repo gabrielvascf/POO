@@ -8,7 +8,7 @@ export default class ListagemPets extends Listagem {
     constructor(pets: Array<Pet>) {
         super()
         this.entrada = new Entrada()
-        this.pets = []
+        this.pets = pets
     }
 
     public cadastrar(): void {
@@ -16,8 +16,9 @@ export default class ListagemPets extends Listagem {
         let nome = this.entrada.receberTexto(`Por favor informe o nome do pet: `)
         let tipo = this.entrada.receberTexto(`Por favor informe o tipo do pet: `)
         let raca = this.entrada.receberTexto(`Por favor informe a raça do pet: `)
-        let genero = this.entrada.receberTexto(`Por favor informe o gênero do pet: `)
-        let pet = new Pet(nome, raca, genero, tipo);
+        let pet = new Pet(nome, raca, tipo);
+        console.log(this)
+        
         this.pets.push(pet)
         console.log(`\nCadastro concluído :)\n`);
     }
@@ -30,14 +31,12 @@ export default class ListagemPets extends Listagem {
             console.log(`Nome: ` + pet.getNome);
             console.log(`Tipo: ` + pet.getTipo);
             console.log(`Raça: ` + pet.getRaca);
-            console.log(`Gênero: ` + pet.getGenero);
             console.log(`--------------------------------------`);
             console.log(`O que deseja editar?`);
             console.log(`(1) - Nome`);
             console.log(`(2) - Tipo`);
             console.log(`(3) - Raça`);
-            console.log(`(4) - Gênero`);
-            console.log(`(5) - Excluir`);
+            console.log(`(4) - Excluir`);
             let entrada = this.entrada.receberNumero(`Digite a opção desejada: `);
             switch (entrada) {
                 case 1:
@@ -53,10 +52,6 @@ export default class ListagemPets extends Listagem {
                     pet.setRaca = novaRaca
                     break;
                 case 4:
-                    let novoGenero = this.entrada.receberTexto(`Digite o novo gênero: `)
-                    pet.setGenero = novoGenero
-                    break;
-                case 5:
                     let index = this.pets.indexOf(pet)
                     this.pets.splice(index, 1)
                     break;
@@ -69,17 +64,17 @@ export default class ListagemPets extends Listagem {
         }
     }
 
-    public listar(): void {
+    public listar(readonly: boolean = false): void {
         console.log("Lista de todos os pets do cliente:");
         console.log("--------------------------------------");
         this.pets.forEach(pet => {
             console.log(`Nome: ` + pet.getNome);
             console.log(`Tipo: ` + pet.getTipo);
             console.log(`Raça: ` + pet.getRaca);
-            console.log(`Gênero: ` + pet.getGenero);
             console.log(`--------------------------------------`);
         });
         console.log(`\n`);
+        if (readonly) return 
         console.log(`Deseja realizar alguma edição?`);
         console.log(`(1) - Sim`);
         console.log(`(2) - Não`);
