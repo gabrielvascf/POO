@@ -7,6 +7,7 @@ type props = {
     tema: string
 }
 
+
 type state = {
     showForm: boolean,
     clients: Cliente[],
@@ -26,17 +27,27 @@ export default class ListaCliente extends Component<props, state>{
     closeForm = () => {
         this.setState({ showForm: false });
     }
-
+    
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState((prevState) => ({
-            ...prevState,
-            [event.target.id]: event.target.value
-        }));
-        console.log(event.target.id);
-        console.log(this.state.currentClient);
-        
+        if (this.state.currentClient) {
+            const updatedClient = { ...this.state.currentClient, [event.target.id]: event.target.value };
+            this.setState({ currentClient: updatedClient });
+        }
     }
 
+    handleDelete = async () => {
+        if (this.state.currentClient) {
+            await fetch(`http://localhost:32831/cliente/excluir`, {
+                method: 'DELETE',
+                body: JSON.stringify(this.state.currentClient),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => console.log(response)).then(this.getClients);
+            this.setState({ showForm: false, currentClient: undefined });
+        }
+    }
+    
     handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         this.setState({ showForm: false });
@@ -46,7 +57,8 @@ export default class ListaCliente extends Component<props, state>{
             headers: {
                 'Content-Type': 'application/json'
             }
-        });
+        }).then(response => console.log(response)).then(this.getClients);
+        
         // DEPOIS EU FAÇO ISSO
     }
 
@@ -78,18 +90,21 @@ export default class ListaCliente extends Component<props, state>{
                                 <div className="modal-body">
                                     <form onSubmit={this.handleSubmit}>
                                         <div className="form-group">
-                                            <label htmlFor="clientName">Nome:</label>
-                                            <input type="text" className="form-control" id="clientName" value={this.state.currentClient?.nome} onChange={this.handleChange} />
+                                            <label htmlFor="nome">Nome:</label>
+                                            <input type="text" className="form-control" id="nome" value={this.state.currentClient?.nome} onChange={this.handleChange} />
                                         </div>
                                         <div className="form-group">
-                                            <label htmlFor="clientSocialName">Nome Social:</label>
-                                            <input type="text" className="form-control" id="clientSocialName" value={this.state.currentClient?.nomeSocial} onChange={this.handleChange} />
+                                            <label htmlFor="nomeSocial">Nome Social:</label>
+                                            <input type="text" className="form-control" id="nomeSocial" value={this.state.currentClient?.nomeSocial} onChange={this.handleChange} />
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="email">Email:</label>
                                             <input type="email" className="form-control" id="email" value={this.state.currentClient?.email} onChange={this.handleChange} />
                                         </div>
-                                        <button type="submit" className="btn btn-primary">Salvar</button>
+                                        <div className="d-flex justify-content-between mt-3">
+                                            <button type="submit" className="btn btn-primary">Salvar</button>
+                                            <button type="button" className="btn btn-danger" onClick={this.handleDelete}>Excluir</button>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
