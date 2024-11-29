@@ -102,7 +102,7 @@ export default class ListaCliente extends Component<props, state> {
               role="dialog"
               style={{ display: "block" }}
             >
-              <div className="modal-dialog" role="document">
+              <div className="modal-dialog modal-lg" role="document">
                 <div className="modal-content">
                   <div className="modal-header">
                     <h5 className="modal-title">Editar cliente</h5>
@@ -115,6 +115,7 @@ export default class ListaCliente extends Component<props, state> {
                   </div>
                   <div className="modal-body">
                     <form onSubmit={this.handleSubmit}>
+                      Informações principais
                       <div className="form-group">
                         <label htmlFor="nome">Nome:</label>
                         <input
@@ -132,10 +133,6 @@ export default class ListaCliente extends Component<props, state> {
                           value={this.state.currentClient?.nomeSocial}
                           onChange={this.handleChange}
                         />
-                      </div>
-                      <div className="form-group">
-                      </div>
-                      <div className="form-group">
                         <label htmlFor="email">Email:</label>
                         <input
                           type="email"
@@ -145,6 +142,7 @@ export default class ListaCliente extends Component<props, state> {
                           onChange={this.handleChange}
                         />
                       </div>
+                      Endereço
                       <div className="form-group">
                         <label htmlFor="estado">Estado:</label>
                         <input
@@ -154,8 +152,6 @@ export default class ListaCliente extends Component<props, state> {
                           value={this.state.currentClient?.endereco.estado}
                           onChange={this.handleChange}
                         />
-                      </div>
-                      <div className="form-group">
                         <label htmlFor="cidade">Cidade:</label>
                         <input
                           type="text"
@@ -164,8 +160,6 @@ export default class ListaCliente extends Component<props, state> {
                           value={this.state.currentClient?.endereco.cidade}
                           onChange={this.handleChange}
                         />
-                      </div>
-                      <div className="form-group">
                         <label htmlFor="bairro">Bairro:</label>
                         <input
                           type="text"
@@ -174,8 +168,6 @@ export default class ListaCliente extends Component<props, state> {
                           value={this.state.currentClient?.endereco.bairro}
                           onChange={this.handleChange}
                         />
-                      </div>
-                      <div className="form-group">
                         <label htmlFor="rua">Rua:</label>
                         <input
                           type="text"
@@ -184,8 +176,6 @@ export default class ListaCliente extends Component<props, state> {
                           value={this.state.currentClient?.endereco.rua}
                           onChange={this.handleChange}
                         />
-                      </div>
-                      <div className="form-group">
                         <label htmlFor="numero">Número:</label>
                         <input
                           type="number"
@@ -194,8 +184,6 @@ export default class ListaCliente extends Component<props, state> {
                           value={this.state.currentClient?.endereco.numero}
                           onChange={this.handleChange}
                         />
-                      </div>
-                      <div className="form-group">
                         <label htmlFor="codigoPostal">Código Postal:</label>
                         <input
                           type="text"
@@ -206,8 +194,6 @@ export default class ListaCliente extends Component<props, state> {
                           }
                           onChange={this.handleChange}
                         />
-                      </div>
-                      <div className="form-group">
                         <label htmlFor="informacoesAdicionais">
                           Informações Adicionais:
                         </label>
@@ -233,12 +219,12 @@ export default class ListaCliente extends Component<props, state> {
                           min="1"
                         />
                       </div>
-                        <div className="form-group">
+                      <div className="form-group">
                         <button
                           type="button"
                           className="btn btn-secondary"
                           onClick={() => {
-                          this.setState({ showProductEditor: true });
+                            this.setState({ showProductEditor: true });
                           }}
                         >
                           Gerenciar Produtos
@@ -248,12 +234,22 @@ export default class ListaCliente extends Component<props, state> {
                           type="button"
                           className="btn btn-secondary"
                           onClick={() => {
-                          this.setState({ showServiceEditor: true });
+                            this.setState({ showServiceEditor: true });
                           }}
                         >
                           Gerenciar Serviços
                         </button>
-                        </div>
+                        {/* <span className="mx-2"></span>
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          onClick={() => {
+                            this.setState({ showPetsEditor: true });
+                          }}
+                        >
+                          Gerenciar Pets
+                        </button> */}
+                      </div>
                       <div className="d-flex justify-content-between mt-3">
                         <button type="submit" className="btn btn-primary">
                           Salvar

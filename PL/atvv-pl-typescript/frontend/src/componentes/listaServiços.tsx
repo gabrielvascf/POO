@@ -32,8 +32,8 @@ export default class ListaServiços extends Component<props, state> {
   handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (this.state.currentService) {
       const updatedService = {
-        ...this.state.currentService,
-        [event.target.id]: event.target.value,
+      ...this.state.currentService,
+      [event.target.id]: event.target.id === "preco" ? parseFloat(event.target.value) : event.target.value,
       };
       this.setState({ currentService: updatedService });
     }

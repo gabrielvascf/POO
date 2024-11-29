@@ -9,7 +9,7 @@ type props = {
     seletorView: Function
 }
 
-export default class BarraNavegacao extends Component<props>{
+export default class BarraNavegacao extends Component<props> {
     constructor(props: props | Readonly<props>) {
         super(props)
         this.gerarListaBotoes = this.gerarListaBotoes.bind(this)

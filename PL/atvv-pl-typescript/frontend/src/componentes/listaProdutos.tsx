@@ -32,7 +32,7 @@ export default class ListaProdutos extends Component<props, state> {
     if (this.state.currentProduct) {
       const updatedProduct = {
         ...this.state.currentProduct,
-        [event.target.id]: event.target.value,
+        [event.target.id]: event.target.id === "preco" ? parseFloat(event.target.value) : event.target.value,
       };
       this.setState({ currentProduct: updatedProduct });
     }

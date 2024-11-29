@@ -29,10 +29,17 @@ export default class EditarProdutosCliente extends Component<Props, State> {
         if (!this.state.newProduct) {
             return;
         }
-        this.setState((prevState) => ({
-            produtos: [...prevState.produtos, { id: 0, nome: prevState.newProduct, preco: 0 }],
+        const selectedProduct = this.state.availableProducts.find(
+            (produto) => produto.nome === this.state.newProduct
+        );
+        console.warn(selectedProduct);
+        
+        if (selectedProduct) {
+            this.setState((prevState) => ({
+            produtos: [...prevState.produtos, selectedProduct],
             newProduct: "",
-        }));
+            }));
+        }
     };
 
     handleRemoveProduct = (index: number) => {
@@ -57,7 +64,9 @@ export default class EditarProdutosCliente extends Component<Props, State> {
     getProducts = () => {
         fetch("http://localhost:3001/produto")
             .then((response) => response.json())
-            .then((data) => this.setState({ availableProducts: data })).then(console.log);
+            .then((data) => {
+                this.setState({ availableProducts: data });
+            });
     }
 
     render() {

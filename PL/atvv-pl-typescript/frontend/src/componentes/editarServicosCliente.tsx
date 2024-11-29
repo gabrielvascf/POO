@@ -28,10 +28,15 @@ export default class EditarServicosCliente extends Component<Props, State> {
         if (!this.state.newService) {
             return;
         }
-        this.setState((prevState) => ({
-            servicos: [...prevState.servicos, { id: 0, nome: prevState.newService, preco: 0 }],
+        const selectedService = this.state.availableServices.find(
+            (service) => service.nome === this.state.newService
+        );
+        if (selectedService) {
+            this.setState((prevState) => ({
+            servicos: [...prevState.servicos, selectedService],
             newService: "",
-        }));
+            }));
+        }
     };
 
     handleRemoveService = (index: number) => {

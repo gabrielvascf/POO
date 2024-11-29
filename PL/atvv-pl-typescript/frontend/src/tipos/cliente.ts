@@ -1,3 +1,6 @@
+import Produto from "./produto";
+import Servico from "./servico";
+
 type Cliente = {
   id: number;
   nome: string;
@@ -13,8 +16,8 @@ type Cliente = {
     informacoesAdicionais?: string;
   };
   telefone: number;
-  servicos?: any[];
-  produtos?: any[];
+  servicos: Servico[];
+  produtos: Produto[];
 };
 
 export default Cliente;

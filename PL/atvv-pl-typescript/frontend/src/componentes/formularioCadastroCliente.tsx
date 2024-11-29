@@ -26,6 +26,8 @@ export default class FormularioCadastroCliente extends Component<props> {
           .value,
       },
       telefone: Number((event.currentTarget[10] as HTMLInputElement).value),
+      produtos: [],
+      servicos: []
     };
     console.log(newClient);
     await fetch("http://localhost:3001/cliente", {
