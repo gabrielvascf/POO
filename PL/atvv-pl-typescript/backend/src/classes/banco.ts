@@ -10,38 +10,77 @@ class Banco {
   Produtos: Produto[] = [];
 
   addCliente(cliente: Cliente) {
+    cliente.id = this.Clientes.length + 1;
     this.Clientes.push(cliente);
   }
-  removeCliente(cliente: Cliente) {
-    const index = this.Clientes.indexOf(cliente);
+  removeCliente(id: number) {
+    const index = this.Clientes.findIndex((cliente) => cliente.id === id);
     this.Clientes.splice(index, 1);
   }
   addPet(pet: Pet) {
+    pet.id = this.Pets.length + 1;
     this.Pets.push(pet);
   }
-  removePet(pet: Pet) {
-    const index = this.Pets.indexOf(pet);
+  removePet(id: number) {
+    const index = this.Pets.findIndex((pet) => pet.id === id);
     this.Pets.splice(index, 1);
   }
   addServico(servico: Servico) {
+    servico.id = this.Servicos.length + 1;
     this.Servicos.push(servico);
   }
-  removeServico(servico: Servico) {
-    const index = this.Servicos.indexOf(servico);
+  removeServico(id: number) {
+    const index = this.Servicos.findIndex((servico) => servico.id === id);
     this.Servicos.splice(index, 1);
   }
   addProduto(produto: Produto) {
+    produto.id = this.Produtos.length + 1;
     this.Produtos.push(produto);
   }
-  removeProduto(produto: Produto) {
-    const index = this.Produtos.indexOf(produto);
+  removeProduto(id: number) {
+    const index = this.Produtos.findIndex((produto) => produto.id === id);
     this.Produtos.splice(index, 1);
   }
 }
-// TODO: pegar apenas clientes por página
-// pegar maiores consumidores por página
-// update cliente
-// update pet
-// update servico
-// update produto
-export default Banco;
+
+const Instance = new Banco();
+
+Instance.addCliente({
+  id: 1,
+  nome: "Luis",
+  nomeSocial: "Luis",
+  email: "exemplo@email",
+  endereco: {
+    estado: "RS",
+    cidade: "Porto Alegre",
+    bairro: "Centro",
+    rua: "Rua dos Andradas",
+    numero: 123,
+    codigoPostal: "90020-022",
+    informacoesAdicionais: "Apartamento 302",
+  },
+  telefone: 51999999999,
+  produtos: [],
+  servicos: [],
+});
+
+Instance.addPet({
+  id: 1,
+  nome: "Rex",
+  raca: "Vira-lata",
+  tipo: "Cachorro",
+});
+
+Instance.addProduto({
+  id: 1,
+  nome: "Ração",
+  preco: 100,
+});
+
+Instance.addServico({
+  id: 1,
+  nome: "Banho",
+  preco: 50,
+});
+
+export default Instance;
