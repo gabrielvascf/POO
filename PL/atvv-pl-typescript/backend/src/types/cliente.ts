@@ -1,6 +1,6 @@
 import Produto from "./produto";
 import Servico from "./servico";
-
+import Pet from "../types/pet";
 type Cliente = {
   id: number;
   nome: string;
@@ -18,6 +18,7 @@ type Cliente = {
   telefone: number;
   produtos: Produto[];
   servicos: Servico[];
+  pets: Pet[];
 };
 
 export default Cliente;
